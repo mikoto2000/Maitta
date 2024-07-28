@@ -34,7 +34,7 @@ npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
 ## 画面遷移用パッケージ追加
 
 ```sh
-npm i react-router
+npm i react-router react-router-dom
 ```
 
 

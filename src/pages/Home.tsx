@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { TaskInfoViewer } from "../functions/task/TaskInfoViewer.tsx";
-import dayjs from "dayjs";
 import { Divider, Stack, styled } from "@mui/material";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -8,6 +7,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { TaskInfo } from '../types.ts';
 import { Service } from "../services/Services.ts";
 import { MockService } from "../services/MockService.ts";
+import { useNavigate } from "react-router";
 
 const StyledAddCircleIcon = styled(AddCircleIcon)(({ theme }) => ({
   fontSize: "3em",
@@ -25,6 +25,8 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
 
   const [taskInfos, setTaskInfos] = useState<TaskInfo[]>([]);
   const [componentState, setComponentState] = useState<"initializing" | "complete">("initializing");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -44,7 +46,7 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
           divider={<Divider flexItem />}
           spacing={2}
         >
-          {taskInfos.map((e) => <TaskInfoViewer name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
+          {taskInfos.map((e) => <TaskInfoViewer onClick={() => { navigate("/tasks/1") }} name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
         </Stack>
 
         <StyledAddCircleIcon />

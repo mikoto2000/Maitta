@@ -3,7 +3,7 @@ import "./App.css";
 import { Home } from "./pages/Home";
 import { createTheme } from "@mui/material";
 import { TaskDetail } from "./pages/TaskDetail";
-import dayjs from "dayjs";
+import { Route, Routes } from "react-router";
 
 function App() {
 
@@ -14,7 +14,10 @@ function App() {
     <div className="container">
 
       <ThemeProvider theme={theme}>
-        <Home />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tasks/:id" element={<TaskDetail />} />
+        </Routes>
       </ThemeProvider>
 
     </div>
