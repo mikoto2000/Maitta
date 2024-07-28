@@ -4,10 +4,11 @@ import { Box, Button, Divider, Stack } from "@mui/material";
 
 type TaskInfoProps = {
   name: string;
+  displayNumber: number;
   history: Dayjs[];
 };
 
-export const TaskInfo: React.FC<TaskInfoProps> = ({ name, history }) => {
+export const TaskInfo: React.FC<TaskInfoProps> = ({ name, displayNumber, history }) => {
 
   return (
     <Stack
@@ -24,7 +25,7 @@ export const TaskInfo: React.FC<TaskInfoProps> = ({ name, history }) => {
         spacing={2}
         style={{ flexGrow: "1" }}
       >
-        <TaskHistory history={history} />
+        <TaskHistory history={history.slice(0, displayNumber)} />
       </Stack>
       <Button>やったよ！</Button>
     </Stack>

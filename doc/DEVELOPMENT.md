@@ -24,3 +24,15 @@ npm install @mui/material @emotion/react @emotion/styled
 ```sh
 npm i dayjs
 ```
+
+## アイコン用パッケージ追加
+
+```sh
+npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+```
+
+## 画面遷移用パッケージ追加
+
+```sh
+
+```
