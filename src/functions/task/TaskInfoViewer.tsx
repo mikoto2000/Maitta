@@ -2,13 +2,13 @@ import { Dayjs } from "dayjs";
 import { TaskHistory } from "./TaskHistory";
 import { Box, Button, Divider, Stack } from "@mui/material";
 
-type TaskInfoProps = {
+type TaskInfoViewerProps = {
   name: string;
   displayNumber: number;
   history: Dayjs[];
 };
 
-export const TaskInfo: React.FC<TaskInfoProps> = ({ name, displayNumber, history }) => {
+export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNumber, history }) => {
 
   return (
     <Stack

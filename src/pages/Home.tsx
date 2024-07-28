@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { TaskInfo } from "../functions/task/TaskInfo";
-import dayjs, { Dayjs } from "dayjs";
+import { TaskInfoViewer } from "../functions/task/TaskInfoViewer.tsx";
+import dayjs from "dayjs";
 import { Divider, Stack, styled } from "@mui/material";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import { TaskInfo } from '../types.ts';
+import { Service } from "../services/Services.ts";
+import { MockService } from "../services/MockService.ts";
 
 const StyledAddCircleIcon = styled(AddCircleIcon)(({ theme }) => ({
   fontSize: "3em",
@@ -14,28 +18,17 @@ const StyledAddCircleIcon = styled(AddCircleIcon)(({ theme }) => ({
 }));
 
 type HomeProps = {
+  service?: Service;
 };
 
-export const Home: React.FC<HomeProps> = ({ }) => {
+export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
 
-  const [taskInfos, setTaskInfos] = useState<Array<{ name: string, displayNumber: number, history: Dayjs[] }>>([]);
+  const [taskInfos, setTaskInfos] = useState<TaskInfo[]>([]);
   const [componentState, setComponentState] = useState<"initializing" | "complete">("initializing");
 
   useEffect(() => {
     (async () => {
-      setTaskInfos([{
-        name: "TaskA",
-        displayNumber: 1,
-        history: [dayjs()],
-      }, {
-        name: "TaskB",
-        displayNumber: 2,
-        history: [dayjs(), dayjs()],
-      }, {
-        name: "TaskC",
-        displayNumber: 4,
-        history: [dayjs(), dayjs(), dayjs(), dayjs()],
-      }]);
+      setTaskInfos(service.getAllTasks());
       setComponentState("complete");
     })()
   }, []);
@@ -51,7 +44,7 @@ export const Home: React.FC<HomeProps> = ({ }) => {
           divider={<Divider flexItem />}
           spacing={2}
         >
-          {taskInfos.map((e) => <TaskInfo name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
+          {taskInfos.map((e) => <TaskInfoViewer name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
         </Stack>
 
         <StyledAddCircleIcon />
