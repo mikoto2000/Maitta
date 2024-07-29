@@ -1,6 +1,12 @@
 import { Box } from "@mui/material";
-import { Dayjs } from "dayjs";
+
+import dayjs, { Dayjs } from "dayjs";
+import timezone from 'dayjs/plugin/timezone'
+
 import React from "react";
+
+dayjs.extend(timezone);
+dayjs.tz.setDefault('Asia/Tokyo');
 
 type TaskHistoryItemProps = {
   datetime: Dayjs
@@ -9,7 +15,7 @@ type TaskHistoryItemProps = {
 export const TaskHistoryItem: React.FC<TaskHistoryItemProps> = ({ datetime }) => {
   return (
     <Box>
-      {datetime.toISOString()}
+      {datetime.format()}
     </Box>
   )
 }

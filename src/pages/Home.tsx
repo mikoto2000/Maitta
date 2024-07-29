@@ -46,7 +46,7 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
           divider={<Divider flexItem />}
           spacing={2}
         >
-          {taskInfos.map((e) => <TaskInfoViewer onClick={() => { navigate("/tasks/1") }} name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
+          {taskInfos.map((e) => <TaskInfoViewer onClick={() => { navigate(`/tasks/${e.id}`) }} name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
         </Stack>
 
         <StyledAddCircleIcon />

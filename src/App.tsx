@@ -5,6 +5,14 @@ import { createTheme } from "@mui/material";
 import { TaskDetail } from "./pages/TaskDetail";
 import { Route, Routes } from "react-router";
 
+import dayjs from "dayjs";
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault(dayjs.tz.guess());
+
 function App() {
 
   const theme = createTheme();
