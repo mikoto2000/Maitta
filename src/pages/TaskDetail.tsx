@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router";
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import toast, { Toaster } from "react-hot-toast";
+import { TaskEditDialog } from "../functions/task/TaskEditDialog";
 
 const DeleteMenuItem = styled(MenuItem)(({ theme }) => ({
   color: theme.palette.error.main,
@@ -30,6 +31,7 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new MockServic
   const menuIcon = useRef(null);
 
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+  const [showTaskEditDialog, setShowTaskEditDialog] = useState<boolean>(false);
 
   useEffect(() => {
     const ti = service.getTaskById(parseInt(id ?? "0"));
@@ -44,7 +46,7 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new MockServic
             sx={{ flexGrow: "0", fontSize: "1em" }}
             onClick={() => navigate(-1)}
           />
-          <Box sx={{ flexGrow: "1" }}>{taskInfo?.name}</Box>
+          <Box sx={{ flexGrow: "1" }}>{taskInfo?.name}(id: {id})</Box>
           <MenuIcon
             ref={menuIcon}
             sx={{ flexGrow: "0", fontSize: "1em", marginRight: `${scrollbarWidth}px` }}
@@ -65,7 +67,9 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new MockServic
         open={showMenu}
         onClose={() => setShowMenu(false)}
       >
-        <MenuItem>
+        <MenuItem
+          onClick={() => setShowTaskEditDialog(true)}
+        >
           タスクを編集
         </MenuItem>
         <DeleteMenuItem
@@ -99,6 +103,14 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new MockServic
           }}>削除</Button>
         </DialogActions>
       </Dialog>
+      <TaskEditDialog
+        show={showTaskEditDialog}
+        service={service}
+        id={taskInfo?.id ?? 0}
+        originalName={taskInfo?.name ?? ""}
+        originalDisplayNumber={taskInfo?.displayNumber ?? 0}
+        onClose={() => setShowTaskEditDialog(false)}
+      />
       <Toaster
         position="bottom-center"
         reverseOrder={false}
