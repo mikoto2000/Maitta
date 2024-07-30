@@ -56,6 +56,9 @@ export class MockService implements Service {
   deleteTask(_id: number): void {
   }
 
+  createTask(_taskName: string, _displayNumber: number): void {
+  }
+
   updateTask(_id: number, _taskName: string, _displayNumber: number): void {
   }
 }

@@ -8,6 +8,7 @@ import { TaskInfo } from '../types.ts';
 import { Service } from "../services/Services.ts";
 import { MockService } from "../services/MockService.ts";
 import { useNavigate } from "react-router";
+import { TaskCreateDialog } from "../functions/task/TaskCreateDialog.tsx";
 
 const StyledAddCircleIcon = styled(AddCircleIcon)(({ theme }) => ({
   fontSize: "3em",
@@ -25,6 +26,8 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
 
   const [taskInfos, setTaskInfos] = useState<TaskInfo[]>([]);
   const [componentState, setComponentState] = useState<"initializing" | "complete">("initializing");
+
+  const [showTaskCreateDialog, setShowTaskCreateDialog] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -49,7 +52,15 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
           {taskInfos.map((e) => <TaskInfoViewer onClick={() => { navigate(`/tasks/${e.id}`) }} name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
         </Stack>
 
-        <StyledAddCircleIcon />
+        <StyledAddCircleIcon
+          onClick={() => { setShowTaskCreateDialog(true) }}
+        />
+
+        <TaskCreateDialog
+          service={service}
+          show={showTaskCreateDialog}
+          onClose={() => { setShowTaskCreateDialog(false) }}
+        />
       </>
     )
   }
