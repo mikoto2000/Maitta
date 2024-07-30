@@ -37,4 +37,9 @@ npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
 npm i react-router react-router-dom
 ```
 
+## バックエンドの RDBMS 用ライブラリ導入
 
+```sh
+cargo add diesel --features sqlite,chrono
+cargo add chrono
+```
