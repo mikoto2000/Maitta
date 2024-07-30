@@ -1,5 +1,4 @@
 import { AppBar, Box, Divider, Menu, MenuItem, Stack, styled } from "@mui/material";
-import { MockService } from "../services/MockService";
 import { Service } from "../services/Services";
 import { useEffect, useRef, useState } from "react";
 import { TaskInfo } from "../types";
@@ -10,6 +9,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import toast, { Toaster } from "react-hot-toast";
 import { TaskEditDialog } from "../functions/task/TaskEditDialog";
 import { ConfirmDialog } from "../commons/ConfirmDialog";
+import { TauriService } from "../services/TauriService";
 
 const DeleteMenuItem = styled(MenuItem)(({ theme }) => ({
   color: theme.palette.error.main,
@@ -19,7 +19,7 @@ type TaskDetailProps = {
   service?: Service;
 };
 
-export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new MockService() }) => {
+export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriService() }) => {
 
   const navigate = useNavigate();
 
@@ -35,8 +35,10 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new MockServic
   const [showTaskEditDialog, setShowTaskEditDialog] = useState<boolean>(false);
 
   useEffect(() => {
-    const ti = service.getTaskById(parseInt(id ?? "0"));
-    setTaskInfo(ti);
+    (async () => {
+      const ti = await service.getTaskById(parseInt(id ?? "0"));
+      setTaskInfo(ti);
+    })()
   }, []);
 
   return (
@@ -85,11 +87,11 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new MockServic
         content={`タスク ID: ${id} のタスクを削除しますか？`}
         okLabel="削除"
         ngLabel="キャンセル"
-        onOkClick={() => {
+        onOkClick={async () => {
           if (id) {
             const taskId = parseInt(id)
             if (taskId) {
-              service.deleteTask(taskId);
+              await service.deleteTask(taskId);
               navigate(-1)
             } else {
               toast.error("タスク ID のパースに失敗しました。")

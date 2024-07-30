@@ -1,23 +1,71 @@
-use crate::models::{Task, TaskWithHistory};
+use crate::models::TaskInfo;
 
 #[tauri::command]
-pub fn get_all_tasks() -> Vec<TaskWithHistory> {
+pub fn get_all_tasks() -> Vec<TaskInfo> {
     println!("👺: get_all_task!");
-    [TaskWithHistory {
-        id: 1,
-        name: "TaskA".to_string(),
-        history: [].to_vec(),
-    }]
+    [
+        TaskInfo {
+            id: 1,
+            name: "TaskA".to_string(),
+            display_number: 1,
+            history: [
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+            ]
+            .to_vec(),
+        },
+        TaskInfo {
+            id: 2,
+            name: "TaskB".to_string(),
+            display_number: 2,
+            history: [
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+            ]
+            .to_vec(),
+        },
+        TaskInfo {
+            id: 3,
+            name: "TaskC".to_string(),
+            display_number: 4,
+            history: [
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+                "2024-07-30T00:00:00.000+09:00".to_string(),
+            ]
+            .to_vec(),
+        },
+    ]
     .to_vec()
 }
 
 #[tauri::command]
-pub fn get_task_by_id(id: u32) -> TaskWithHistory {
+pub fn get_task_by_id(id: u32) -> TaskInfo {
     println!("👺: get_task_by_id! : {}", id);
-    TaskWithHistory {
-        id: 2,
-        name: "TaskB".to_string(),
-        history: [].to_vec(),
+    TaskInfo {
+        id: 4,
+        name: "GetTaskByIdで取得したタスク".to_string(),
+        display_number: 2,
+        history: [
+            "2024-07-30T00:00:00.000+09:00".to_string(),
+            "2024-07-30T00:00:00.000+09:00".to_string(),
+            "2024-07-30T00:00:00.000+09:00".to_string(),
+            "2024-07-30T00:00:00.000+09:00".to_string(),
+            "2024-07-30T00:00:00.000+09:00".to_string(),
+            "2024-07-30T00:00:00.000+09:00".to_string(),
+        ]
+        .to_vec(),
     }
 }
 
@@ -40,11 +88,12 @@ pub fn create_task(name: String, display_number: u32) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn update_task(id: u32, name: String, display_number: u32) -> Result<Task, String> {
+pub fn update_task(id: u32, name: String, display_number: u32) -> Result<TaskInfo, String> {
     println!("👺: update_task! : {}, {}, {}", id, name, display_number);
-    Ok(Task {
+    Ok(TaskInfo {
         id: 3,
         name: "TaskC".to_string(),
         display_number: 3,
+        history: [].to_vec(),
     })
 }

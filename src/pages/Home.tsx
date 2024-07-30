@@ -6,9 +6,9 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { TaskInfo } from '../types.ts';
 import { Service } from "../services/Services.ts";
-import { MockService } from "../services/MockService.ts";
 import { useNavigate } from "react-router";
 import { TaskCreateDialog } from "../functions/task/TaskCreateDialog.tsx";
+import { TauriService } from "../services/TauriService.ts";
 
 const StyledAddCircleIcon = styled(AddCircleIcon)(({ theme }) => ({
   fontSize: "3em",
@@ -22,7 +22,7 @@ type HomeProps = {
   service?: Service;
 };
 
-export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
+export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
 
   const [taskInfos, setTaskInfos] = useState<TaskInfo[]>([]);
   const [componentState, setComponentState] = useState<"initializing" | "complete">("initializing");
@@ -33,7 +33,7 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
 
   useEffect(() => {
     (async () => {
-      setTaskInfos(service.getAllTasks());
+      setTaskInfos(await service.getAllTasks());
       setComponentState("complete");
     })()
   }, []);
@@ -53,10 +53,10 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
             onItemClick={() => {
               navigate(`/tasks/${e.id}`)
             }}
-            onButtonClick={() => {
-              service.executeTask(e.id);
+            onButtonClick={async () => {
+              await service.executeTask(e.id);
               // TODO: 実行したタスクだけ再描画できたらいいね
-              setTaskInfos(service.getAllTasks());
+              setTaskInfos(await service.getAllTasks());
             }}
             name={e.name}
             displayNumber={e.displayNumber}
@@ -72,7 +72,7 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
           service={service}
           show={showTaskCreateDialog}
           onClose={() => { setShowTaskCreateDialog(false) }}
-          onCreated={() => { setTaskInfos(service.getAllTasks()) }}
+          onCreated={async () => { setTaskInfos(await service.getAllTasks()) }}
         />
       </>
     )
