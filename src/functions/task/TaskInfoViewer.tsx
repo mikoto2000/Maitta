@@ -6,17 +6,18 @@ type TaskInfoViewerProps = {
   name: string;
   displayNumber: number;
   history: Dayjs[];
-  onClick: () => void;
+  onItemClick: () => void;
+  onButtonClick: () => void;
 };
 
-export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNumber, history, onClick }) => {
+export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNumber, history, onItemClick, onButtonClick }) => {
 
   return (
     <Stack
       direction="row"
       divider={<Divider orientation="vertical" flexItem />}
       spacing={3}
-      onClick={onClick}
+      onClick={onItemClick}
     >
       <Box
         alignItems="center"
@@ -29,7 +30,10 @@ export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNum
       >
         <TaskHistory history={history.slice(0, displayNumber)} />
       </Stack>
-      <Button>やったよ！</Button>
+      <Button onClick={(e) => {
+        e.stopPropagation();
+        onButtonClick()
+      }}>やったよ！</Button>
     </Stack>
   )
 }

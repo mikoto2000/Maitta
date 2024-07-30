@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Service } from "../../services/Services";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, TextField } from "@mui/material";
 import { ConfirmDialog } from "../../commons/ConfirmDialog";
@@ -7,9 +7,10 @@ type TaskCreateDialogProps = {
   service: Service;
   show: boolean;
   onClose: () => void;
+  onCreated: () => void;
 };
 
-export const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({ service, show, onClose }) => {
+export const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({ service, show, onClose, onCreated }) => {
 
   const [name, setName] = useState<string>("");
   const [displayNumber, setDisplayNumber] = useState<number>(1);
@@ -56,6 +57,7 @@ export const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({ service, sho
         ngLabel="キャンセル"
         onOkClick={() => {
           service.createTask(name, displayNumber);
+          onCreated();
           setShowConfirmDialog(false)
           onClose()
         }}

@@ -49,17 +49,30 @@ export const Home: React.FC<HomeProps> = ({ service = new MockService() }) => {
           divider={<Divider flexItem />}
           spacing={2}
         >
-          {taskInfos.map((e) => <TaskInfoViewer onClick={() => { navigate(`/tasks/${e.id}`) }} name={e.name} displayNumber={e.displayNumber} history={e.history} />)}
+          {taskInfos.map((e) => <TaskInfoViewer
+            onItemClick={() => {
+              navigate(`/tasks/${e.id}`)
+            }}
+            onButtonClick={() => {
+              service.executeTask(e.id);
+              // TODO: 実行したタスクだけ再描画できたらいいね
+              setTaskInfos(service.getAllTasks());
+            }}
+            name={e.name}
+            displayNumber={e.displayNumber}
+            history={e.history} />)}
         </Stack>
 
         <StyledAddCircleIcon
           onClick={() => { setShowTaskCreateDialog(true) }}
+
         />
 
         <TaskCreateDialog
           service={service}
           show={showTaskCreateDialog}
           onClose={() => { setShowTaskCreateDialog(false) }}
+          onCreated={() => { setTaskInfos(service.getAllTasks()) }}
         />
       </>
     )
