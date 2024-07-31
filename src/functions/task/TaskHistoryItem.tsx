@@ -12,10 +12,12 @@ type TaskHistoryItemProps = {
   datetime: Dayjs
 };
 
+const machineTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 export const TaskHistoryItem: React.FC<TaskHistoryItemProps> = ({ datetime }) => {
   return (
     <Box>
-      {datetime.format()}
+      {datetime.tz(machineTimeZone).format()}
     </Box>
   )
 }
