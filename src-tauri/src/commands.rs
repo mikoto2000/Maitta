@@ -82,14 +82,14 @@ pub fn delete_task(id: u32) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn create_task(name: String, display_number: u32) -> Result<(), String> {
-    println!("👺: create_task! : {}, {}", name, display_number);
+pub fn create_task(task_name: String, display_number: u32) -> Result<(), String> {
+    println!("👺: create_task! : {}, {}", task_name, display_number);
     Ok(())
 }
 
 #[tauri::command]
-pub fn update_task(id: u32, name: String, display_number: u32) -> Result<TaskInfo, String> {
-    println!("👺: update_task! : {}, {}, {}", id, name, display_number);
+pub fn update_task(id: u32, task_name: String, display_number: u32) -> Result<TaskInfo, String> {
+    println!("👺: update_task! : {}, {}, {}", id, task_name, display_number);
     Ok(TaskInfo {
         id: 3,
         name: "TaskC".to_string(),

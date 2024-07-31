@@ -27,17 +27,17 @@ export class TauriService implements Service {
       history
     }
   }
-  async executeTask(_id: number): Promise<void> {
-    throw new Error("Method not implemented.");
+  async executeTask(id: number): Promise<void> {
+    invoke("execute_task", { id });
   }
-  async deleteTask(_id: number): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteTask(id: number): Promise<void> {
+    invoke("delete_task", { id });
   }
-  async createTask(_taskName: string, _displayNumber: number): Promise<void> {
-    throw new Error("Method not implemented.");
+  async createTask(taskName: string, displayNumber: number): Promise<void> {
+    invoke("create_task", { taskName, displayNumber });
   }
-  async updateTask(_id: number, _taskName: string, _displayNumber: number): Promise<void> {
-    throw new Error("Method not implemented.");
+  async updateTask(id: number, taskName: string, displayNumber: number): Promise<void> {
+    invoke("update_task", { id, taskName, displayNumber });
   }
 }
 
