@@ -5,7 +5,9 @@ use std::collections::HashMap;
 use std::env;
 use std::sync::{Arc, Mutex};
 
-use diesel::{Connection, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection};
+use diesel::{
+    Connection, ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper, SqliteConnection,
+};
 
 use crate::models::{ExecuteTaskParam, Task, TaskHistory, TaskInfo};
 use crate::{
@@ -54,13 +56,54 @@ pub fn get_all_tasks(conn: &Arc<Mutex<SqliteConnection>>) -> Vec<TaskInfo> {
         .collect();
 
     result.sort_by(|a, b| {
-        if a.history.is_empty() {
+        if a.history.is_empty() && !b.history.is_empty() {
             Ordering::Less
+        } else if !a.history.is_empty() && b.history.is_empty() {
+            Ordering::Greater
+        } else if a.history.is_empty() && b.history.is_empty() {
+            Ordering::Equal
         } else {
             b.history[0].cmp(&(a.history[0]))
         }
     });
     result
+}
+
+pub fn get_task_by_id(conn: &Arc<Mutex<SqliteConnection>>, id: i32) -> TaskInfo {
+    let mut conn = conn.lock().unwrap();
+
+    let tasks = crate::schema::task::table
+        .filter(crate::schema::task::dsl::id.eq(id))
+        .left_join(crate::schema::task_history::table)
+        .select((Task::as_select(), Option::<TaskHistory>::as_select()))
+        .load::<(Task, Option<TaskHistory>)>(&mut *conn)
+        .unwrap();
+
+    let grouped_tasks = tasks.into_iter().fold(HashMap::new(), |mut acc, (t, h)| {
+        acc.entry(t).or_insert(Vec::new()).push(h);
+        acc
+    });
+
+    // TaskInfo の形に変換して返却
+    let result: Vec<TaskInfo> = grouped_tasks
+        .into_iter()
+        .map(|(k, v)| {
+            let mut history: Vec<String> = v
+                .into_iter()
+                .filter_map(|e| e.map(|t| t.datetime))
+                .collect();
+            history.sort();
+            history.reverse();
+            TaskInfo {
+                id: k.id.unwrap(),
+                name: k.task_name,
+                display_number: k.display_number,
+                history,
+            }
+        })
+        .collect();
+
+    result.first().unwrap().clone()
 }
 
 pub fn create_task(conn: &Arc<Mutex<SqliteConnection>>, task_name: String, display_number: i32) {

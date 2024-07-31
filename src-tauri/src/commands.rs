@@ -6,27 +6,14 @@ use crate::{database, models::TaskInfo, AppState};
 pub fn get_all_tasks(state: State<'_, AppState>) -> Vec<TaskInfo> {
     println!("👺: get_all_task!");
     let conn = state.conn.clone();
-
     database::get_all_tasks(&conn)
 }
 
 #[tauri::command]
-pub fn get_task_by_id(id: u32) -> TaskInfo {
+pub fn get_task_by_id(state: State<'_, AppState>, id: i32) -> TaskInfo {
     println!("👺: get_task_by_id! : {}", id);
-    TaskInfo {
-        id: 4,
-        name: "GetTaskByIdで取得したタスク".to_string(),
-        display_number: 2,
-        history: [
-            "2024-07-30T00:00:00.000+09:00".to_string(),
-            "2024-07-30T00:00:00.000+09:00".to_string(),
-            "2024-07-30T00:00:00.000+09:00".to_string(),
-            "2024-07-30T00:00:00.000+09:00".to_string(),
-            "2024-07-30T00:00:00.000+09:00".to_string(),
-            "2024-07-30T00:00:00.000+09:00".to_string(),
-        ]
-        .to_vec(),
-    }
+    let conn = state.conn.clone();
+    database::get_task_by_id(&conn, id)
 }
 
 #[tauri::command]
@@ -44,7 +31,11 @@ pub fn delete_task(id: u32) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn create_task(state: State<'_, AppState>, task_name: String, display_number: i32) -> Result<(), String> {
+pub fn create_task(
+    state: State<'_, AppState>,
+    task_name: String,
+    display_number: i32,
+) -> Result<(), String> {
     println!("👺: create_task! : {}, {}", task_name, display_number);
     let conn = state.conn.clone();
 
