@@ -1,53 +1,13 @@
-use crate::models::TaskInfo;
+use tauri::State;
+
+use crate::{database, models::TaskInfo, AppState};
 
 #[tauri::command]
-pub fn get_all_tasks() -> Vec<TaskInfo> {
+pub fn get_all_tasks(state: State<'_, AppState>) -> Vec<TaskInfo> {
     println!("👺: get_all_task!");
-    [
-        TaskInfo {
-            id: 1,
-            name: "TaskA".to_string(),
-            display_number: 1,
-            history: [
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-            ]
-            .to_vec(),
-        },
-        TaskInfo {
-            id: 2,
-            name: "TaskB".to_string(),
-            display_number: 2,
-            history: [
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-            ]
-            .to_vec(),
-        },
-        TaskInfo {
-            id: 3,
-            name: "TaskC".to_string(),
-            display_number: 4,
-            history: [
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-                "2024-07-30T00:00:00.000+09:00".to_string(),
-            ]
-            .to_vec(),
-        },
-    ]
-    .to_vec()
+    let conn = state.conn.clone();
+
+    database::get_all_tasks(&conn)
 }
 
 #[tauri::command]
@@ -70,8 +30,10 @@ pub fn get_task_by_id(id: u32) -> TaskInfo {
 }
 
 #[tauri::command]
-pub fn execute_task(id: u32) -> Result<(), String> {
+pub fn execute_task(state: State<'_, AppState>, id: i32) -> Result<(), String> {
     println!("👺: execute_task! : {}", id);
+    let conn = state.conn.clone();
+    database::execute_task(&conn, id).unwrap();
     Ok(())
 }
 
@@ -82,8 +44,12 @@ pub fn delete_task(id: u32) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn create_task(task_name: String, display_number: u32) -> Result<(), String> {
+pub fn create_task(state: State<'_, AppState>, task_name: String, display_number: i32) -> Result<(), String> {
     println!("👺: create_task! : {}, {}", task_name, display_number);
+    let conn = state.conn.clone();
+
+    database::create_task(&conn, task_name, display_number);
+
     Ok(())
 }
 
