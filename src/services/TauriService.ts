@@ -11,7 +11,7 @@ export class TauriService implements Service {
       return {
         id: taskInfo.id,
         name: taskInfo.name,
-        displayNumber: taskInfo.displayNumber,
+        displayNumber: taskInfo.displa_number,
         history
       }
     });
@@ -23,7 +23,7 @@ export class TauriService implements Service {
     return {
       id: result.id,
       name: result.name,
-      displayNumber: result.displayNumber,
+      displayNumber: result.display_number,
       history
     }
   }

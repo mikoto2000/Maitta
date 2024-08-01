@@ -109,6 +109,10 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriServi
         id={taskInfo?.id ?? 0}
         originalName={taskInfo?.name ?? ""}
         originalDisplayNumber={taskInfo?.displayNumber ?? 0}
+        onChange={async () => {
+          const ti = await service.getTaskById(parseInt(id ?? "0"));
+          setTaskInfo(ti);
+        }}
         onClose={() => setShowTaskEditDialog(false)}
       />
       <Toaster

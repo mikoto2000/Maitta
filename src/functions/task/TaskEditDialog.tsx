@@ -6,13 +6,22 @@ import { ConfirmDialog } from "../../commons/ConfirmDialog";
 type TaskEditDialogProps = {
   service: Service;
   show: boolean;
+  onChange: () => void;
   onClose: () => void;
   id: number;
   originalName: string;
   originalDisplayNumber: number;
 };
 
-export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ service, show, onClose, id, originalName, originalDisplayNumber }) => {
+export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({
+  service,
+  show,
+  onChange,
+  onClose,
+  id,
+  originalName,
+  originalDisplayNumber
+}) => {
 
   const [name, setName] = useState<string>(originalName);
   const [displayNumber, setDisplayNumber] = useState<number>(originalDisplayNumber);
@@ -64,7 +73,10 @@ export const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ service, show, o
         ngLabel="キャンセル"
         onOkClick={() => {
           service.updateTask(id, name, displayNumber);
+          setName(name);
+          setDisplayNumber(displayNumber);
           setShowConfirmDialog(false)
+          onChange()
           onClose()
         }}
         onNgClick={() => { setShowConfirmDialog(false) }}
