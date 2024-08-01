@@ -48,6 +48,7 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
         <Stack
           divider={<Divider flexItem />}
           spacing={2}
+          sx={{ overflowY: "auto" }}
         >
           {taskInfos.map((e) => <TaskInfoViewer
             onItemClick={() => {
@@ -65,7 +66,6 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
 
         <StyledAddCircleIcon
           onClick={() => { setShowTaskCreateDialog(true) }}
-
         />
 
         <TaskCreateDialog

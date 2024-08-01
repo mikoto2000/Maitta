@@ -15,6 +15,19 @@ const DeleteMenuItem = styled(MenuItem)(({ theme }) => ({
   color: theme.palette.error.main,
 }));
 
+const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+
+const StyledHeader = styled(AppBar)(() => ({
+  fontSize: "1.5em",
+  height: "1.5em"
+}));
+
+const StyledMenuIcon = styled(MenuIcon)(() => ({
+  flexGrow: "0",
+  fontSize: "1.5em",
+  marginRight: `${scrollbarWidth}px`
+}));
+
 type TaskDetailProps = {
   service?: Service;
 };
@@ -22,8 +35,6 @@ type TaskDetailProps = {
 export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriService() }) => {
 
   const navigate = useNavigate();
-
-  const scrollbarWidth = window.innerWidth - document.body.clientWidth;
 
   const [taskInfo, setTaskInfo] = useState<TaskInfo | null>(null);
   const { id } = useParams<{ id: string }>();
@@ -43,20 +54,19 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriServi
 
   return (
     <>
-      <AppBar sx={{ fontSize: "2em", height: "1em" }}>
+      <StyledHeader>
         <Stack direction="row">
           <ArrowBackIcon
-            sx={{ flexGrow: "0", fontSize: "1em" }}
+            sx={{ flexGrow: "0", fontSize: "1.5em" }}
             onClick={() => navigate(-1)}
           />
           <Box sx={{ flexGrow: "1" }}>{taskInfo?.name}(id: {id})</Box>
-          <MenuIcon
+          <StyledMenuIcon
             ref={menuIcon}
-            sx={{ flexGrow: "0", fontSize: "1em", marginRight: `${scrollbarWidth}px` }}
             onClick={() => setShowMenu(true)}
           />
         </Stack>
-      </AppBar>
+      </StyledHeader>
       <Stack
         divider={<Divider flexItem />}
         spacing={2}

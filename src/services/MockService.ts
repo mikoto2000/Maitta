@@ -1,8 +1,16 @@
 import dayjs from "dayjs";
-import { TaskInfo } from "../types";
+import { DisplayMode, TaskInfo } from "../types";
 import { Service } from "./Services";
 
 export class MockService implements Service {
+  saveDisplayMode: async (_: DisplayMode) {
+  },
+
+  getDisplayMode: async (): Promise<DisplayMode> {
+    return 'light';
+  },
+
+
   getAllTasks(): TaskInfo[] {
     return [{
       id: 1,

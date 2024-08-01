@@ -1,9 +1,20 @@
 import { invoke } from "@tauri-apps/api/core";
-import { TaskInfo } from "../types";
+import { DisplayMode, TaskInfo } from "../types";
 import { Service } from "./Services";
 import dayjs from "dayjs";
+import { Store } from "@tauri-apps/plugin-store";
 
 export class TauriService implements Service {
+  private store = new Store("settings.dat");
+
+  async saveDisplayMode(mode: DisplayMode) {
+    this.store.set("displayMode", mode);
+    this.store.save();
+  }
+
+  async getDisplayMode(): Promise<DisplayMode> {
+    return await this.store.get<DisplayMode>("displayMode") as DisplayMode;
+  }
   async getAllTasks(): Promise<TaskInfo[]> {
     const result: any[] = await invoke("get_all_tasks", {});
     const tasks = result.map((taskInfo: any) => {

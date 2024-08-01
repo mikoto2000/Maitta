@@ -1,6 +1,10 @@
-import { TaskInfo } from "../types";
+import { DisplayMode, TaskInfo } from "../types";
 
 export interface Service {
+  // Setting
+  saveDisplayMode(mode: DisplayMode): Promise<void>;
+  getDisplayMode(): Promise<DisplayMode>;
+  // DB
   getAllTasks(): Promise<TaskInfo[]>;
   getTaskById(id: number): Promise<TaskInfo>;
   executeTask(id: number): Promise<void>;

@@ -88,3 +88,9 @@ cp .env.template .env
 cargo add tauri-plugin-store@2.0.0-beta
 npm add @tauri-apps/plugin-store
 ```
+
+## ディスプレイモードを記録するために Store プラグインを追加
+
+```sh
+
+```
