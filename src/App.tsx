@@ -37,7 +37,8 @@ function App({ service = new TauriService() }) {
 
   useEffect(() => {
     (async () => {
-      setCurrentDisplayMode("light");
+      const mode = await service.getDisplayMode() ?? "light";
+      setCurrentDisplayMode(mode);
     })();
   }, []);
 
@@ -57,11 +58,10 @@ function App({ service = new TauriService() }) {
             console.log(event);
             const mode = event.currentTarget.checked ? 'dark' : 'light';
             setCurrentDisplayMode(mode);
+            service.saveDisplayMode(mode)
           }}
         />
       </ThemeProvider>
-
-
     </div>
   );
 }

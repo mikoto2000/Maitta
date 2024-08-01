@@ -30,7 +30,7 @@ export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNum
       >
         <TaskHistory history={history.slice(0, displayNumber)} />
       </Stack>
-      <Button onClick={(e) => {
+      <Button sx={{ boxShadow: 0 }} onClick={(e) => {
         e.stopPropagation();
         onButtonClick()
       }}>やったよ！</Button>

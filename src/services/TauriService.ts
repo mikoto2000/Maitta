@@ -6,7 +6,6 @@ import { Store } from "@tauri-apps/plugin-store";
 
 export class TauriService implements Service {
   private store = new Store("settings.dat");
-
   async saveDisplayMode(mode: DisplayMode) {
     this.store.set("displayMode", mode);
     this.store.save();
