@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 import { TaskHistory } from "./TaskHistory";
-import { Box, Button, Divider, Stack } from "@mui/material";
+import { Box, Button, Divider, Grid, Stack } from "@mui/material";
 
 type TaskInfoViewerProps = {
   name: string;
@@ -13,27 +13,29 @@ type TaskInfoViewerProps = {
 export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNumber, history, onItemClick, onButtonClick }) => {
 
   return (
-    <Stack
-      direction="row"
-      divider={<Divider orientation="vertical" flexItem />}
-      spacing={3}
+    <Grid
+      container
       onClick={onItemClick}
     >
-      <Box
-        alignItems="center"
-        style={{ flexGrow: "1" }}
-      >{name}</Box>
-      <Stack
-        direction="column"
-        spacing={2}
-        style={{ flexGrow: "1" }}
-      >
-        <TaskHistory history={history.slice(0, displayNumber)} />
-      </Stack>
-      <Button sx={{ boxShadow: 0 }} onClick={(e) => {
-        e.stopPropagation();
-        onButtonClick()
-      }}>やったよ！</Button>
-    </Stack>
+      <Grid xs={3}>
+        {name}
+      </Grid>
+      <Divider orientation="vertical" flexItem />
+      <Grid xs={7}>
+        <Stack
+          direction="column"
+          spacing={2}
+        >
+          <TaskHistory history={history.slice(0, displayNumber)} />
+        </Stack>
+      </Grid>
+      <Divider orientation="vertical" flexItem />
+      <Grid xs={2} style={{ margin: "-2px" }}>
+        <Button sx={{ boxShadow: 0 }} onClick={(e) => {
+          e.stopPropagation();
+          onButtonClick()
+        }}>やったよ！</Button>
+      </Grid>
+    </Grid>
   )
 }

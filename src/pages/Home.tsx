@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TaskInfoViewer } from "../functions/task/TaskInfoViewer.tsx";
-import { Divider, Stack, styled } from "@mui/material";
+import { Divider, Grid, Stack, styled } from "@mui/material";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -45,12 +45,8 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
 
     return (
       <>
-        <Stack
-          divider={<Divider flexItem />}
-          spacing={2}
-          sx={{ overflowY: "auto" }}
-        >
-          {taskInfos.map((e) => <TaskInfoViewer
+        {taskInfos.map((e) => <>
+          <TaskInfoViewer
             onItemClick={() => {
               navigate(`/tasks/${e.id}`)
             }}
@@ -61,8 +57,10 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
             }}
             name={e.name}
             displayNumber={e.displayNumber}
-            history={e.history} />)}
-        </Stack>
+            history={e.history} />
+            <Divider />
+        </>
+        )}
 
         <StyledAddCircleIcon
           onClick={() => { setShowTaskCreateDialog(true) }}
