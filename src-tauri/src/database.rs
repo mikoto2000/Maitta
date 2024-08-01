@@ -106,6 +106,14 @@ pub fn get_task_by_id(conn: &Arc<Mutex<SqliteConnection>>, id: i32) -> TaskInfo 
     result.first().unwrap().clone()
 }
 
+pub fn delete_task(conn: &Arc<Mutex<SqliteConnection>>, id: i32) {
+    let mut conn = conn.lock().unwrap();
+
+    diesel::delete(task.filter(crate::schema::task::dsl::id.eq(id)))
+        .execute(&mut *conn)
+        .expect("Error saving new task");
+}
+
 pub fn create_task(conn: &Arc<Mutex<SqliteConnection>>, task_name: String, display_number: i32) {
     let new_task = CreateTaskParam {
         task_name,
@@ -118,6 +126,23 @@ pub fn create_task(conn: &Arc<Mutex<SqliteConnection>>, task_name: String, displ
         .values(&new_task)
         .execute(&mut *conn)
         .expect("Error saving new task");
+}
+
+pub fn update_task(
+    conn: &Arc<Mutex<SqliteConnection>>,
+    id: i32,
+    task_name: String,
+    display_number: i32,
+) {
+    let mut conn = conn.lock().unwrap();
+
+    diesel::update(task.filter(crate::schema::task::dsl::id.eq(id.clone())))
+        .set((
+            crate::schema::task::dsl::task_name.eq(task_name),
+            crate::schema::task::dsl::display_number.eq(display_number.clone()),
+        ))
+        .execute(&mut *conn)
+        .expect("Error update task");
 }
 
 pub fn execute_task(conn: &Arc<Mutex<SqliteConnection>>, id: i32) -> Result<(), String> {

@@ -25,8 +25,10 @@ pub fn execute_task(state: State<'_, AppState>, id: i32) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn delete_task(id: u32) -> Result<(), String> {
+pub fn delete_task(state: State<'_, AppState>, id: i32) -> Result<(), String> {
     println!("👺: delete_task! : {}", id);
+    let conn = state.conn.clone();
+    database::delete_task(&conn, id);
     Ok(())
 }
 
@@ -38,19 +40,22 @@ pub fn create_task(
 ) -> Result<(), String> {
     println!("👺: create_task! : {}, {}", task_name, display_number);
     let conn = state.conn.clone();
-
     database::create_task(&conn, task_name, display_number);
-
     Ok(())
 }
 
 #[tauri::command]
-pub fn update_task(id: u32, task_name: String, display_number: u32) -> Result<TaskInfo, String> {
-    println!("👺: update_task! : {}, {}, {}", id, task_name, display_number);
-    Ok(TaskInfo {
-        id: 3,
-        name: "TaskC".to_string(),
-        display_number: 3,
-        history: [].to_vec(),
-    })
+pub fn update_task(
+    state: State<'_, AppState>,
+    id: i32,
+    task_name: String,
+    display_number: i32,
+) -> Result<(), String> {
+    println!(
+        "👺: update_task! : {}, {}, {}", 
+        id, task_name, display_number
+    );
+    let conn = state.conn.clone();
+    database::update_task(&conn, id, task_name, display_number);
+    Ok(())
 }
