@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 import { TaskHistory } from "./TaskHistory";
-import { Box, Button, Divider, Grid, Stack } from "@mui/material";
+import { Button, Divider, Grid, Stack } from "@mui/material";
 
 type TaskInfoViewerProps = {
   name: string;
@@ -17,11 +17,11 @@ export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNum
       container
       onClick={onItemClick}
     >
-      <Grid xs={3}>
+      <Grid xs={5}>
         {name}
       </Grid>
       <Divider orientation="vertical" flexItem />
-      <Grid xs={7}>
+      <Grid xs={5}>
         <Stack
           direction="column"
           spacing={2}

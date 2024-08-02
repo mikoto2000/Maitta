@@ -28,7 +28,7 @@ export const TaskHistoryItem: React.FC<TaskHistoryItemProps> = ({ datetime }) =>
 
   return (
     <Box>
-      {datetimeTz.format()}{}({datetimeTz.fromNow()})
+      {datetimeTz.fromNow()}
     </Box>
   )
 }
