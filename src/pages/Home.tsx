@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TaskInfoViewer } from "../functions/task/TaskInfoViewer.tsx";
-import { Divider, styled } from "@mui/material";
+import { Box, Divider, styled } from "@mui/material";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -9,6 +9,7 @@ import { Service } from "../services/Services.ts";
 import { useNavigate } from "react-router";
 import { TaskCreateDialog } from "../functions/task/TaskCreateDialog.tsx";
 import { TauriService } from "../services/TauriService.ts";
+import { Header } from "../commons/Header.tsx";
 
 const StyledAddCircleIcon = styled(AddCircleIcon)(({ theme }) => ({
   fontSize: "3em",
@@ -45,6 +46,9 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
 
     return (
       <>
+        <Header>
+          <Box>Maitta (<b>Ma</b>e <b>i</b>tsu ya<b>tta</b>?)</Box>
+        </Header>
         {taskInfos.map((e) => <>
           <TaskInfoViewer
             onItemClick={() => {
@@ -58,11 +62,12 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
             name={e.name}
             displayNumber={e.displayNumber}
             history={e.history} />
-            <Divider />
+          <Divider />
         </>
         )}
 
         <StyledAddCircleIcon
+          sx={{ cursor: "pointer" }}
           onClick={() => { setShowTaskCreateDialog(true) }}
         />
 

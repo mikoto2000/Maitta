@@ -10,17 +10,13 @@ import toast, { Toaster } from "react-hot-toast";
 import { TaskEditDialog } from "../functions/task/TaskEditDialog";
 import { ConfirmDialog } from "../commons/ConfirmDialog";
 import { TauriService } from "../services/TauriService";
+import { Header } from "../commons/Header";
 
 const DeleteMenuItem = styled(MenuItem)(({ theme }) => ({
   color: theme.palette.error.main,
 }));
 
 const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-
-const StyledHeader = styled(AppBar)(() => ({
-  fontSize: "1.5em",
-  height: "1.5em"
-}));
 
 const StyledMenuIcon = styled(MenuIcon)(() => ({
   flexGrow: "0",
@@ -54,19 +50,20 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriServi
 
   return (
     <>
-      <StyledHeader>
+      <Header>
         <Stack direction="row">
           <ArrowBackIcon
-            sx={{ flexGrow: "0", fontSize: "1.5em" }}
+            sx={{ flexGrow: "0", fontSize: "1.5em", cursor: "pointer" }}
             onClick={() => navigate(-1)}
           />
           <Box sx={{ flexGrow: "1" }}>{taskInfo?.name}(id: {id})</Box>
           <StyledMenuIcon
+            sx={{ cursor: "pointer" }}
             ref={menuIcon}
             onClick={() => setShowMenu(true)}
           />
         </Stack>
-      </StyledHeader>
+      </Header>
       <Stack
         divider={<Divider flexItem />}
         spacing={2}

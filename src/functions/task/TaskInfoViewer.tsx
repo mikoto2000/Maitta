@@ -16,6 +16,7 @@ export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNum
 
   return (
     <Grid
+      sx={{ cursor: "pointer" }}
       container
       onClick={onItemClick}
     >
@@ -36,7 +37,7 @@ export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNum
         <Button sx={{ boxShadow: 0, height: "100%", width: "100%" }} onClick={(e) => {
           e.stopPropagation();
           onButtonClick()
-        }}><DoneIcon sx={{fontSize: "2em"}} /></Button>
+        }}><DoneIcon sx={{ fontSize: "2em" }} /></Button>
       </Grid>
     </Grid>
   )
