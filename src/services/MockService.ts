@@ -3,15 +3,15 @@ import { DisplayMode, TaskInfo } from "../types";
 import { Service } from "./Services";
 
 export class MockService implements Service {
-  saveDisplayMode: async (_: DisplayMode) {
-  },
+  saveDisplayMode = async (_: DisplayMode): Promise<void> => {
+  };
 
-  getDisplayMode: async (): Promise<DisplayMode> {
+  getDisplayMode =  async (): Promise<DisplayMode> => {
     return 'light';
-  },
+  };
 
 
-  getAllTasks(): TaskInfo[] {
+  getAllTasks = async (): Promise<TaskInfo[]> => {
     return [{
       id: 1,
       name: "TaskA",
@@ -29,7 +29,7 @@ export class MockService implements Service {
       history: [dayjs.tz(), dayjs.tz(), dayjs.tz(), dayjs.tz()],
     }]
   }
-  getTaskById(id: number): TaskInfo {
+  getTaskById = async (id: number): Promise<TaskInfo> => {
     if (id === 1) {
       return {
         id: 1,
@@ -61,16 +61,16 @@ export class MockService implements Service {
     }
   }
 
-  executeTask(_id: number): void {
+  executeTask = async (_id: number): Promise<void> => {
   }
 
-  deleteTask(_id: number): void {
+  deleteTask = async (_id: number): Promise<void> => {
   }
 
-  createTask(_taskName: string, _displayNumber: number): void {
+  createTask = async (_taskName: string, _displayNumber: number): Promise<void> => {
   }
 
-  updateTask(_id: number, _taskName: string, _displayNumber: number): void {
+  updateTask = async (_id: number, _taskName: string, _displayNumber: number): Promise<void> => {
   }
 }
 

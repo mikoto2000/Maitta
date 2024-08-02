@@ -1,7 +1,7 @@
 {
   "productName": "maitta",
-  "version": "0.0.0",
-  "identifier": "com.tauri.dev",
+  "version": "1.0.0",
+  "identifier": "dev.mikoto2000.maitta",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",

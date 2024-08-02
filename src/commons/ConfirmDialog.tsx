@@ -1,6 +1,5 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import React from "react";
-import toast from "react-hot-toast";
 
 type ConfirmDialogProps = {
   show: boolean;

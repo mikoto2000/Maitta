@@ -95,3 +95,15 @@ npm add @tauri-apps/plugin-store
 cargo add tauri-plugin-store@2.0.0-beta
 npm add @tauri-apps/plugin-store
 ```
+
+## エラーをトースト表示するためにライブラリをインストール
+
+```sh
+npm i react-hot-toast
+```
+
+## 組み込み SQLite3 のライブラリを追加
+
+```sh
+cargo add libsqlite3-sys@0.28.0 --features bundled
+```

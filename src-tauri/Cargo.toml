@@ -1,8 +1,8 @@
 [package]
 name = "maitta"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+version = "1.0.0"
+description = "`Mae itsu yatta?` management application."
+authors = ["mikoto2000"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -24,4 +24,5 @@ chrono = { version = "0.4.38", features = ["serde"] }
 dotenv = "0.15.0"
 diesel_migrations = { version = "2.2.0", features = ["sqlite"] }
 tauri-plugin-store = "2.0.0-beta"
+libsqlite3-sys = { version = "0.28.0", features = ["bundled"] }
 

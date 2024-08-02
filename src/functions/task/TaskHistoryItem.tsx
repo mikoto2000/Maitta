@@ -6,21 +6,18 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import React from "react";
 
-dayjs.extend(timezone);
-dayjs.extend(relativeTime);
-
-type TaskHistoryItemProps = {
-  datetime: Dayjs
-};
+import "dayjs/locale/ja"
 
 const machineTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const userLocale = navigator.language.split('-')[0];
 
-import(`dayjs/locale/${userLocale}`)
-  .then(() => {
-    dayjs.locale(userLocale);
-  })
-  .catch(() => { })
+dayjs.extend(timezone);
+dayjs.extend(relativeTime);
+dayjs.locale(userLocale);
+
+type TaskHistoryItemProps = {
+  datetime: Dayjs
+};
 
 export const TaskHistoryItem: React.FC<TaskHistoryItemProps> = ({ datetime }) => {
 
@@ -28,7 +25,7 @@ export const TaskHistoryItem: React.FC<TaskHistoryItemProps> = ({ datetime }) =>
 
   return (
     <Box>
-      {datetimeTz.fromNow()}
+      {datetimeTz.fromNow()}, {userLocale}, {machineTimeZone}
     </Box>
   )
 }

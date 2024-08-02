@@ -73,8 +73,8 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriServi
       >
         {
           taskInfo?.history.map((e) => <Stack>
-            <Box>{e.format()}</Box>
-            <Box>({e.fromNow()})</Box>
+            <Box>{e.tz().format()}</Box>
+            <Box>({e.tz().fromNow()})</Box>
           </Stack>)
         }
       </Stack>

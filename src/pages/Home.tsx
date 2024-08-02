@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TaskInfoViewer } from "../functions/task/TaskInfoViewer.tsx";
-import { Divider, Grid, Stack, styled } from "@mui/material";
+import { Divider, styled } from "@mui/material";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
