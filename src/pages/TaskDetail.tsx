@@ -1,4 +1,4 @@
-import { AppBar, Box, Divider, Menu, MenuItem, Stack, styled } from "@mui/material";
+import { Box, Divider, Menu, MenuItem, Stack, styled } from "@mui/material";
 import { Service } from "../services/Services";
 import { useEffect, useRef, useState } from "react";
 import { TaskInfo } from "../types";

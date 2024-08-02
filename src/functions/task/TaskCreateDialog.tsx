@@ -30,6 +30,7 @@ export const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({ service, sho
         <DialogContent>
           <Stack spacing={2}>
             <TextField
+              autoFocus
               label="タスク名"
               value={name}
               onChange={(e) => setName(e.currentTarget.value)}
