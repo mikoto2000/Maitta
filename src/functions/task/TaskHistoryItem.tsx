@@ -25,7 +25,7 @@ export const TaskHistoryItem: React.FC<TaskHistoryItemProps> = ({ datetime }) =>
 
   return (
     <Box>
-      {datetimeTz.fromNow()}, {userLocale}, {machineTimeZone}
+      {datetimeTz.fromNow()}
     </Box>
   )
 }
