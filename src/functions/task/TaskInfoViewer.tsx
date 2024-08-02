@@ -2,6 +2,8 @@ import { Dayjs } from "dayjs";
 import { TaskHistory } from "./TaskHistory";
 import { Button, Divider, Grid, Stack } from "@mui/material";
 
+import DoneIcon from '@mui/icons-material/Done';
+
 type TaskInfoViewerProps = {
   name: string;
   displayNumber: number;
@@ -31,10 +33,10 @@ export const TaskInfoViewer: React.FC<TaskInfoViewerProps> = ({ name, displayNum
       </Grid>
       <Divider orientation="vertical" flexItem />
       <Grid xs={2} style={{ margin: "-2px" }}>
-        <Button sx={{ boxShadow: 0 }} onClick={(e) => {
+        <Button sx={{ boxShadow: 0, height: "100%", width: "100%" }} onClick={(e) => {
           e.stopPropagation();
           onButtonClick()
-        }}>やったよ！</Button>
+        }}><DoneIcon sx={{fontSize: "2em"}} /></Button>
       </Grid>
     </Grid>
   )
