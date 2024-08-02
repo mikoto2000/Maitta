@@ -25,4 +25,5 @@ dotenv = "0.15.0"
 diesel_migrations = { version = "2.2.0", features = ["sqlite"] }
 tauri-plugin-store = "2.0.0-beta"
 libsqlite3-sys = { version = "0.28.0", features = ["bundled"] }
+tauri-plugin-window-state = "2.0.0-beta"
 

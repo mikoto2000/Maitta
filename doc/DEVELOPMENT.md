@@ -107,3 +107,11 @@ npm i react-hot-toast
 ```sh
 cargo add libsqlite3-sys@0.28.0 --features bundled
 ```
+
+## ウィンドウ状態保存のためのプラグイン導入
+
+```sh
+cargo add tauri-plugin-window-state
+npm i @tauri-apps/plugin-window-state
+```
+
