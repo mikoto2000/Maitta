@@ -17,7 +17,7 @@ struct AppState {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .setup(|app| {
             // DB コネクションを貼って State として管理してもらう
             let app_local_data_dir = app.path().app_local_data_dir().unwrap();
@@ -34,7 +34,6 @@ pub fn run() {
         })
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::default().build())
-        .plugin(tauri_plugin_window_state::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
             commands::get_all_tasks,
             commands::get_task_by_id,
@@ -42,7 +41,20 @@ pub fn run() {
             commands::delete_task,
             commands::create_task,
             commands::update_task
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        ]);
+
+    #[cfg(desktop)]
+    {
+        builder
+            .plugin(tauri_plugin_window_state::Builder::default().build())
+            .run(tauri::generate_context!())
+            .expect("error while running tauri application");
+    }
+
+    #[cfg(mobile)]
+    {
+        builder
+            .run(tauri::generate_context!())
+            .expect("error while running tauri application");
+    }
 }
