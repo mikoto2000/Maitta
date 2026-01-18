@@ -9,6 +9,7 @@
      "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
      "PULSE_SERVER": "${localEnv:PULSE_SERVER}"
   },
+  "postCreateCommand": "npm install -g @openai/codex",
   "mounts": [
     {
       "type": "bind",
@@ -34,6 +35,11 @@
       "type": "bind",
       "source": "/mnt/wslg",
       "target": "/mnt/wslg"
-    }
+    },
+    {
+      "type": "bind",
+      "source": "${localEnv:HOME}/.codex",
+      "target": "/home/vscode/.codex"
+    },
   ]
 }
