@@ -1,3 +1,30 @@
 spring:
   application:
     name: maitta
+  datasource:
+    url: jdbc:postgresql://postgres:5432/public
+    username: admin
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    url: jdbc:postgresql://postgres:5432/public
+    user: admin
+    password: password
+    schemas: public
+    default-schema: public
+
+app:
+  cors:
+    enabled: true
+    allowed-origins:
+      - "*"

@@ -8,10 +8,11 @@ import { Route, Routes } from "react-router";
 import dayjs from "dayjs";
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DisplayMode } from "./types";
 import { Service } from "./services/Services";
 import { TauriService } from "./services/TauriService";
+import { SpringBootService } from "./services/SpringBootService";
 import { theme } from "./theme";
 
 import { MaterialUISwitch } from "./functions/displayMode/MaterialUISwitch";
@@ -32,15 +33,20 @@ export type AppProps = {
   service?: Service;
 }
 
-function App({ service = new TauriService() }) {
+function App({ service }: AppProps) {
+  const defaultService = useMemo(() => {
+    const mode = (import.meta as any).env?.VITE_SERVICE_MODE ?? "tauri";
+    return mode === "spring" ? new SpringBootService() : new TauriService();
+  }, []);
+  const activeService = service ?? defaultService;
   const [currentDisplayMode, setCurrentDisplayMode] = useState<DisplayMode>('light');
 
   useEffect(() => {
     (async () => {
-      const mode = await service.getDisplayMode() ?? "light";
+      const mode = await activeService.getDisplayMode() ?? "light";
       setCurrentDisplayMode(mode);
     })();
-  }, []);
+  }, [activeService]);
 
   return (
 
@@ -49,8 +55,8 @@ function App({ service = new TauriService() }) {
       <ThemeProvider theme={theme(currentDisplayMode)}>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<Home service={service} />} />
-          <Route path="/tasks/:id" element={<TaskDetail service={service} />} />
+          <Route path="/" element={<Home service={activeService} />} />
+          <Route path="/tasks/:id" element={<TaskDetail service={activeService} />} />
         </Routes>
         <StyledMaterialUISwitch
           checked={currentDisplayMode === 'light' ? false : true}
@@ -58,7 +64,7 @@ function App({ service = new TauriService() }) {
             console.log(event);
             const mode = event.currentTarget.checked ? 'dark' : 'light';
             setCurrentDisplayMode(mode);
-            service.saveDisplayMode(mode)
+            activeService.saveDisplayMode(mode)
           }}
         />
       </ThemeProvider>
