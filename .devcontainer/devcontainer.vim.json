@@ -9,7 +9,7 @@
      "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
      "PULSE_SERVER": "${localEnv:PULSE_SERVER}"
   },
-  "postCreateCommand": "npm install -g @openai/codex",
+  "postCreateCommand": "sudo npm install -g @openai/codex",
   "mounts": [
     {
       "type": "bind",
