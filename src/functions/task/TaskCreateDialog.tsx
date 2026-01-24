@@ -7,7 +7,7 @@ type TaskCreateDialogProps = {
   service: Service;
   show: boolean;
   onClose: () => void;
-  onCreated: () => void;
+  onCreated: () => Promise<void>;
 };
 
 export const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({ service, show, onClose, onCreated }) => {
@@ -56,11 +56,11 @@ export const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({ service, sho
         content="タスクを作成しますか？"
         okLabel="作成"
         ngLabel="キャンセル"
-        onOkClick={() => {
-          service.createTask(name, displayNumber);
-          onCreated();
-          setShowConfirmDialog(false)
-          onClose()
+        onOkClick={async () => {
+          await service.createTask(name, displayNumber);
+          await onCreated();
+          setShowConfirmDialog(false);
+          onClose();
         }}
         onNgClick={() => { setShowConfirmDialog(false) }}
         onClose={() => { setShowConfirmDialog(false) }}
@@ -68,4 +68,3 @@ export const TaskCreateDialog: React.FC<TaskCreateDialogProps> = ({ service, sho
     </>
   )
 }
-

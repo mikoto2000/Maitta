@@ -14,6 +14,16 @@ export class TauriService implements Service {
   async getDisplayMode(): Promise<DisplayMode> {
     return await this.store.get<DisplayMode>("displayMode") as DisplayMode;
   }
+
+  async checkAuth(): Promise<void> {
+  }
+
+  async getLoginUser(): Promise<string> {
+    return "local";
+  }
+
+  async logout(): Promise<void> {
+  }
   async getAllTasks(): Promise<TaskInfo[]> {
     const result: any[] = await invoke("get_all_tasks", {});
     const tasks = result.map((taskInfo: any) => {
@@ -50,4 +60,3 @@ export class TauriService implements Service {
     invoke("update_task", { id, taskName, displayNumber });
   }
 }
-

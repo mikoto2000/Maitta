@@ -4,6 +4,10 @@ export interface Service {
   // Setting
   saveDisplayMode(mode: DisplayMode): Promise<void>;
   getDisplayMode(): Promise<DisplayMode>;
+  // Auth
+  checkAuth(): Promise<void>;
+  getLoginUser(): Promise<string>;
+  logout(): Promise<void>;
   // DB
   getAllTasks(): Promise<TaskInfo[]>;
   getTaskById(id: number): Promise<TaskInfo>;
