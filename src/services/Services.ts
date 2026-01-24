@@ -6,6 +6,8 @@ export interface Service {
   getDisplayMode(): Promise<DisplayMode>;
   // Auth
   checkAuth(): Promise<void>;
+  getLoginUser(): Promise<string>;
+  logout(): Promise<void>;
   // DB
   getAllTasks(): Promise<TaskInfo[]>;
   getTaskById(id: number): Promise<TaskInfo>;

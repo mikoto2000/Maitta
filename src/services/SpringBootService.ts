@@ -41,6 +41,33 @@ export class SpringBootService implements Service {
     }
   }
 
+  async getLoginUser(): Promise<string> {
+    const response = await fetch(`${this.baseUrl}/api/auth/me`, {
+      credentials: "include",
+    });
+    if (response.status === 401 || response.status === 403) {
+      window.location.href = "/login";
+      return "";
+    }
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`Request failed: ${response.status} ${response.statusText} ${body}`);
+    }
+    const data = (await response.json()) as { name?: string; login?: string };
+    return data.name || data.login || "";
+  }
+
+  async logout(): Promise<void> {
+    await fetch(`${this.baseUrl}/logout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        ...(this.getCsrfHeader() ?? {}),
+      },
+    });
+    window.location.href = "/login";
+  }
+
   async getAllTasks(): Promise<TaskInfo[]> {
     const tasks = await this.requestJson<TaskInfoResponse[]>("/api/tasks");
     return tasks.map((task) => ({

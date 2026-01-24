@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TaskInfoViewer } from "../functions/task/TaskInfoViewer.tsx";
-import { Box, Divider, styled } from "@mui/material";
+import { Box, Button, Divider, Stack, styled } from "@mui/material";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -27,6 +27,7 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
 
   const [taskInfos, setTaskInfos] = useState<TaskInfo[]>([]);
   const [componentState, setComponentState] = useState<"initializing" | "complete">("initializing");
+  const [loginUser, setLoginUser] = useState<string>("");
 
   const [showTaskCreateDialog, setShowTaskCreateDialog] = useState<boolean>(false);
 
@@ -39,6 +40,12 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
     })()
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      setLoginUser(await service.getLoginUser());
+    })();
+  }, []);
+
   const render = () => {
     if (componentState !== "complete") {
       return <p>loading...</p>;
@@ -47,7 +54,23 @@ export const Home: React.FC<HomeProps> = ({ service = new TauriService() }) => {
     return (
       <>
         <Header>
-          <Box>Maitta (<b>Ma</b>e <b>i</b>tsu ya<b>tta</b>?)</Box>
+          <Stack direction="row" alignItems="center">
+            <Box sx={{ flexGrow: "1" }}>Maitta (<b>Ma</b>e <b>i</b>tsu ya<b>tta</b>?)</Box>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Box sx={{ fontSize: "0.8em" }}>{loginUser}</Box>
+              <Button
+                size="small"
+                variant="outlined"
+                color="inherit"
+                sx={{ borderColor: "rgba(255,255,255,0.7)" }}
+                onClick={async () => {
+                  await service.logout();
+                }}
+              >
+                ログアウト
+              </Button>
+            </Stack>
+          </Stack>
         </Header>
         {taskInfos.map((e) => <>
           <TaskInfoViewer

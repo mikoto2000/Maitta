@@ -17,6 +17,13 @@ export class TauriService implements Service {
 
   async checkAuth(): Promise<void> {
   }
+
+  async getLoginUser(): Promise<string> {
+    return "local";
+  }
+
+  async logout(): Promise<void> {
+  }
   async getAllTasks(): Promise<TaskInfo[]> {
     const result: any[] = await invoke("get_all_tasks", {});
     const tasks = result.map((taskInfo: any) => {

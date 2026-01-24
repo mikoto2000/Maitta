@@ -1,4 +1,4 @@
-import { Box, Divider, Menu, MenuItem, Stack, styled } from "@mui/material";
+import { Box, Button, Divider, Menu, MenuItem, Stack, styled } from "@mui/material";
 import { Service } from "../services/Services";
 import { useEffect, useRef, useState } from "react";
 import { TaskInfo } from "../types";
@@ -33,6 +33,7 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriServi
   const navigate = useNavigate();
 
   const [taskInfo, setTaskInfo] = useState<TaskInfo | null>(null);
+  const [loginUser, setLoginUser] = useState<string>("");
   const { id } = useParams<{ id: string }>();
 
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -48,15 +49,35 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ service = new TauriServi
     })()
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      setLoginUser(await service.getLoginUser());
+    })();
+  }, []);
+
   return (
     <>
       <Header>
-        <Stack direction="row">
+        <Stack direction="row" alignItems="center">
           <ArrowBackIcon
             sx={{ flexGrow: "0", fontSize: "1.5em", cursor: "pointer" }}
             onClick={() => navigate(-1)}
           />
           <Box sx={{ flexGrow: "1" }}>{taskInfo?.name}(id: {id})</Box>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Box sx={{ fontSize: "0.8em" }}>{loginUser}</Box>
+            <Button
+              size="small"
+              variant="outlined"
+              color="inherit"
+              sx={{ borderColor: "rgba(255,255,255,0.7)" }}
+              onClick={async () => {
+                await service.logout();
+              }}
+            >
+              ログアウト
+            </Button>
+          </Stack>
           <StyledMenuIcon
             sx={{ cursor: "pointer" }}
             ref={menuIcon}
