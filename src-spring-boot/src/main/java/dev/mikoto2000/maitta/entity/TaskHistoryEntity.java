@@ -10,12 +10,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Task history table entity.
  */
 @Entity
 @Table(name = "task_history")
+@Getter
+@Setter
 public class TaskHistoryEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,28 +31,4 @@ public class TaskHistoryEntity {
 
   @Column(name = "datetime", nullable = false)
   private OffsetDateTime datetime;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public TaskEntity getTask() {
-    return task;
-  }
-
-  public void setTask(TaskEntity task) {
-    this.task = task;
-  }
-
-  public OffsetDateTime getDatetime() {
-    return datetime;
-  }
-
-  public void setDatetime(OffsetDateTime datetime) {
-    this.datetime = datetime;
-  }
 }

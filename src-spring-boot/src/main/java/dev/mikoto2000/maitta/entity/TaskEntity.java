@@ -11,12 +11,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Task table entity.
  */
 @Entity
 @Table(name = "task")
+@Getter
+@Setter
 public class TaskEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,36 +38,4 @@ public class TaskEntity {
       orphanRemoval = true,
       fetch = FetchType.LAZY)
   private List<TaskHistoryEntity> histories = new ArrayList<>();
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getTaskName() {
-    return taskName;
-  }
-
-  public void setTaskName(String taskName) {
-    this.taskName = taskName;
-  }
-
-  public Integer getDisplayNumber() {
-    return displayNumber;
-  }
-
-  public void setDisplayNumber(Integer displayNumber) {
-    this.displayNumber = displayNumber;
-  }
-
-  public List<TaskHistoryEntity> getHistories() {
-    return histories;
-  }
-
-  public void setHistories(List<TaskHistoryEntity> histories) {
-    this.histories = histories;
-  }
 }
