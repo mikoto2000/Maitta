@@ -10,6 +10,9 @@ export class MockService implements Service {
     return 'light';
   };
 
+  checkAuth = async (): Promise<void> => {
+  };
+
 
   getAllTasks = async (): Promise<TaskInfo[]> => {
     return [{
@@ -73,4 +76,3 @@ export class MockService implements Service {
   updateTask = async (_id: number, _taskName: string, _displayNumber: number): Promise<void> => {
   }
 }
-

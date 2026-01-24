@@ -26,6 +26,10 @@ export class SpringBootService implements Service {
     return mode ?? "light";
   }
 
+  async checkAuth(): Promise<void> {
+    await this.requestJson<void>("/api/auth/status");
+  }
+
   async getAllTasks(): Promise<TaskInfo[]> {
     const tasks = await this.requestJson<TaskInfoResponse[]>("/api/tasks");
     return tasks.map((task) => ({
@@ -69,15 +73,25 @@ export class SpringBootService implements Service {
   }
 
   private async requestJson<T>(path: string, init: RequestInit = {}): Promise<T> {
+    if (!this.getCsrfToken() && this.requiresCsrf(init)) {
+      await this.ensureCsrfToken();
+    }
+
     const response = await fetch(`${this.baseUrl}${path}`, {
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        ...(this.getCsrfHeader() ?? {}),
         ...(init.headers ?? {}),
       },
       ...init,
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        window.location.href = "/login";
+        throw new Error("Unauthorized");
+      }
       const body = await response.text();
       throw new Error(`Request failed: ${response.status} ${response.statusText} ${body}`);
     }
@@ -87,5 +101,27 @@ export class SpringBootService implements Service {
     }
 
     return response.json() as Promise<T>;
+  }
+
+  private requiresCsrf(init: RequestInit): boolean {
+    const method = (init.method ?? "GET").toUpperCase();
+    return method !== "GET" && method !== "HEAD" && method !== "OPTIONS";
+  }
+
+  private getCsrfToken(): string | null {
+    const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  private getCsrfHeader(): Record<string, string> | null {
+    const token = this.getCsrfToken();
+    if (!token) {
+      return null;
+    }
+    return { "X-XSRF-TOKEN": token };
+  }
+
+  private async ensureCsrfToken(): Promise<void> {
+    await fetch(`${this.baseUrl}/api/csrf`, { credentials: "include" });
   }
 }

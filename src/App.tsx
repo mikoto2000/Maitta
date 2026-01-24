@@ -14,6 +14,7 @@ import { Service } from "./services/Services";
 import { TauriService } from "./services/TauriService";
 import { SpringBootService } from "./services/SpringBootService";
 import { theme } from "./theme";
+import { Login } from "./pages/Login";
 
 import { MaterialUISwitch } from "./functions/displayMode/MaterialUISwitch";
 
@@ -48,6 +49,18 @@ function App({ service }: AppProps) {
     })();
   }, [activeService]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        await activeService.checkAuth();
+      } catch (err) {
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+      }
+    })();
+  }, [activeService]);
+
   return (
 
     <div className="container">
@@ -55,6 +68,7 @@ function App({ service }: AppProps) {
       <ThemeProvider theme={theme(currentDisplayMode)}>
         <CssBaseline />
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home service={activeService} />} />
           <Route path="/tasks/:id" element={<TaskDetail service={activeService} />} />
         </Routes>
