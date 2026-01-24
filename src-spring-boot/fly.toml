@@ -1,23 +1,23 @@
-app = "maitta-api"
-primary_region = "nrt"
+# fly.toml app configuration file generated for maitta on 2026-01-24T07:59:32Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'maitta'
+primary_region = 'nrt'
 
 [build]
-  dockerfile = "Dockerfile"
-
-[env]
-  SERVER_PORT = "8080"
-  MAITTA_ALLOWED_ORIGINS = "https://maitta.pages.dev"
-  MAITTA_FRONTEND_SUCCESS_URL = "https://maitta.pages.dev/"
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
+  processes = ['app']
 
 [[vm]]
-  memory = "512mb"
-  cpu_kind = "shared"
+  memory = '1gb'
+  cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256
