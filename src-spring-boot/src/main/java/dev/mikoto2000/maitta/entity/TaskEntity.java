@@ -29,6 +29,9 @@ public class TaskEntity {
   @Column(name = "task_name", nullable = false)
   private String taskName;
 
+  @Column(name = "owner_login", nullable = false)
+  private String ownerLogin;
+
   @Column(name = "display_number", nullable = false)
   private Integer displayNumber;
 

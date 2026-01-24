@@ -12,6 +12,7 @@ type TaskInfoResponse = {
 export class SpringBootService implements Service {
   private baseUrl: string;
   private displayModeKey = "displayMode";
+  private csrfToken: string | null = null;
 
   constructor(baseUrl: string = (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:8080") {
     this.baseUrl = baseUrl.replace(/\/+$/, "");
@@ -27,7 +28,17 @@ export class SpringBootService implements Service {
   }
 
   async checkAuth(): Promise<void> {
-    await this.requestJson<void>("/api/auth/status");
+    const response = await fetch(`${this.baseUrl}/api/auth/status`, {
+      credentials: "include",
+    });
+    if (response.status === 401 || response.status === 403) {
+      window.location.href = "/login";
+      return;
+    }
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`Request failed: ${response.status} ${response.statusText} ${body}`);
+    }
   }
 
   async getAllTasks(): Promise<TaskInfo[]> {
@@ -73,34 +84,13 @@ export class SpringBootService implements Service {
   }
 
   private async requestJson<T>(path: string, init: RequestInit = {}): Promise<T> {
-    if (!this.getCsrfToken() && this.requiresCsrf(init)) {
-      await this.ensureCsrfToken();
+    const response = await this.requestWithCsrf(path, init, false);
+    if (!response.ok && response.status === 403 && this.requiresCsrf(init)) {
+      const retried = await this.requestWithCsrf(path, init, true);
+      return this.handleResponse(retried);
     }
 
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...(this.getCsrfHeader() ?? {}),
-        ...(init.headers ?? {}),
-      },
-      ...init,
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        window.location.href = "/login";
-        throw new Error("Unauthorized");
-      }
-      const body = await response.text();
-      throw new Error(`Request failed: ${response.status} ${response.statusText} ${body}`);
-    }
-
-    if (response.status === 204) {
-      return undefined as T;
-    }
-
-    return response.json() as Promise<T>;
+    return this.handleResponse(response);
   }
 
   private requiresCsrf(init: RequestInit): boolean {
@@ -114,7 +104,7 @@ export class SpringBootService implements Service {
   }
 
   private getCsrfHeader(): Record<string, string> | null {
-    const token = this.getCsrfToken();
+    const token = this.csrfToken ?? this.getCsrfToken();
     if (!token) {
       return null;
     }
@@ -122,6 +112,52 @@ export class SpringBootService implements Service {
   }
 
   private async ensureCsrfToken(): Promise<void> {
-    await fetch(`${this.baseUrl}/api/csrf`, { credentials: "include" });
+    const response = await fetch(`${this.baseUrl}/api/csrf`, { credentials: "include" });
+    if (!response.ok) {
+      return;
+    }
+    const data = (await response.json()) as { token?: string };
+    if (data.token) {
+      this.csrfToken = data.token;
+    }
+  }
+
+  private async requestWithCsrf(
+    path: string,
+    init: RequestInit,
+    forceRefreshCsrf: boolean
+  ): Promise<Response> {
+    if (this.requiresCsrf(init)) {
+      if (forceRefreshCsrf || !this.getCsrfToken()) {
+        await this.ensureCsrfToken();
+      }
+    }
+
+    return fetch(`${this.baseUrl}${path}`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(this.getCsrfHeader() ?? {}),
+        ...(init.headers ?? {}),
+      },
+      ...init,
+    });
+  }
+
+  private async handleResponse<T>(response: Response): Promise<T> {
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        window.location.href = "/login";
+        return undefined as T;
+      }
+      const body = await response.text();
+      throw new Error(`Request failed: ${response.status} ${response.statusText} ${body}`);
+    }
+
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
+    return response.json() as Promise<T>;
   }
 }

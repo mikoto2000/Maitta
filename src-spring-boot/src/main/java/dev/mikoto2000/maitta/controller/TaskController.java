@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import dev.mikoto2000.maitta.service.TaskService;
 
 /**
@@ -32,8 +35,10 @@ public class TaskController {
    * GET /api/tasks
    */
   @GetMapping("/tasks")
-  public ResponseEntity<List<TaskInfoResponse>> getAllTasks() {
-    List<TaskInfoResponse> tasks = taskService.getAllTasks().stream()
+  public ResponseEntity<List<TaskInfoResponse>> getAllTasks(
+      @AuthenticationPrincipal OAuth2User principal) {
+    String ownerLogin = resolveOwnerLogin(principal);
+    List<TaskInfoResponse> tasks = taskService.getAllTasks(ownerLogin).stream()
         .map(this::toTaskInfoResponse)
         .collect(Collectors.toList());
     return ResponseEntity.ok(tasks);
@@ -43,16 +48,22 @@ public class TaskController {
    * GET /api/tasks/{id}
    */
   @GetMapping("/tasks/{id}")
-  public ResponseEntity<TaskInfoResponse> getTaskById(@PathVariable("id") long id) {
-    return ResponseEntity.ok(toTaskInfoResponse(taskService.getTaskById(id)));
+  public ResponseEntity<TaskInfoResponse> getTaskById(
+      @PathVariable("id") long id,
+      @AuthenticationPrincipal OAuth2User principal) {
+    String ownerLogin = resolveOwnerLogin(principal);
+    return ResponseEntity.ok(toTaskInfoResponse(taskService.getTaskById(id, ownerLogin)));
   }
 
   /**
    * POST /api/tasks/{id}/execute
    */
   @PostMapping("/tasks/{id}/execute")
-  public ResponseEntity<Map<String, Object>> executeTask(@PathVariable("id") long id) {
-    taskService.executeTask(id);
+  public ResponseEntity<Map<String, Object>> executeTask(
+      @PathVariable("id") long id,
+      @AuthenticationPrincipal OAuth2User principal) {
+    String ownerLogin = resolveOwnerLogin(principal);
+    taskService.executeTask(id, ownerLogin);
     return ResponseEntity.ok(Collections.emptyMap());
   }
 
@@ -60,8 +71,11 @@ public class TaskController {
    * DELETE /api/tasks/{id}
    */
   @DeleteMapping("/tasks/{id}")
-  public ResponseEntity<Void> deleteTask(@PathVariable("id") long id) {
-    taskService.deleteTask(id);
+  public ResponseEntity<Void> deleteTask(
+      @PathVariable("id") long id,
+      @AuthenticationPrincipal OAuth2User principal) {
+    String ownerLogin = resolveOwnerLogin(principal);
+    taskService.deleteTask(id, ownerLogin);
     return ResponseEntity.noContent().build();
   }
 
@@ -69,8 +83,11 @@ public class TaskController {
    * POST /api/tasks
    */
   @PostMapping("/tasks")
-  public ResponseEntity<CreateTaskResponse> createTask(@RequestBody CreateTaskRequest request) {
-    long id = taskService.createTask(request.taskName(), request.displayNumber());
+  public ResponseEntity<CreateTaskResponse> createTask(
+      @RequestBody CreateTaskRequest request,
+      @AuthenticationPrincipal OAuth2User principal) {
+    String ownerLogin = resolveOwnerLogin(principal);
+    long id = taskService.createTask(request.taskName(), request.displayNumber(), ownerLogin);
     return ResponseEntity.status(HttpStatus.CREATED).body(new CreateTaskResponse(id));
   }
 
@@ -80,8 +97,10 @@ public class TaskController {
   @PutMapping("/tasks/{id}")
   public ResponseEntity<Void> updateTask(
       @PathVariable("id") long id,
-      @RequestBody UpdateTaskRequest request) {
-    taskService.updateTask(id, request.taskName(), request.displayNumber());
+      @RequestBody UpdateTaskRequest request,
+      @AuthenticationPrincipal OAuth2User principal) {
+    String ownerLogin = resolveOwnerLogin(principal);
+    taskService.updateTask(id, request.taskName(), request.displayNumber(), ownerLogin);
     return ResponseEntity.noContent().build();
   }
 
@@ -113,5 +132,19 @@ public class TaskController {
         info.name(),
         info.displayNumber(),
         info.history());
+  }
+
+  private String resolveOwnerLogin(OAuth2User principal) {
+    if (principal == null) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+    }
+    String login = principal.getAttribute("login");
+    if (login == null || login.isBlank()) {
+      login = principal.getName();
+    }
+    if (login == null || login.isBlank()) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+    }
+    return login;
   }
 }

@@ -31,22 +31,22 @@ public class TaskService {
   }
 
   @Transactional(readOnly = true)
-  public List<TaskInfo> getAllTasks() {
-    return taskRepository.findAll().stream()
+  public List<TaskInfo> getAllTasks(String ownerLogin) {
+    return taskRepository.findByOwnerLogin(ownerLogin).stream()
         .map(this::toTaskInfo)
         .collect(Collectors.toList());
   }
 
   @Transactional(readOnly = true)
-  public TaskInfo getTaskById(long id) {
-    TaskEntity task = taskRepository.findById(id)
+  public TaskInfo getTaskById(long id, String ownerLogin) {
+    TaskEntity task = taskRepository.findByIdAndOwnerLogin(id, ownerLogin)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     return toTaskInfo(task);
   }
 
   @Transactional
-  public void executeTask(long id) {
-    TaskEntity task = taskRepository.findById(id)
+  public void executeTask(long id, String ownerLogin) {
+    TaskEntity task = taskRepository.findByIdAndOwnerLogin(id, ownerLogin)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     TaskHistoryEntity history = new TaskHistoryEntity();
     history.setTask(task);
@@ -55,24 +55,24 @@ public class TaskService {
   }
 
   @Transactional
-  public void deleteTask(long id) {
-    if (!taskRepository.existsById(id)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
-    }
-    taskRepository.deleteById(id);
+  public void deleteTask(long id, String ownerLogin) {
+    TaskEntity task = taskRepository.findByIdAndOwnerLogin(id, ownerLogin)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+    taskRepository.delete(task);
   }
 
   @Transactional
-  public long createTask(String taskName, int displayNumber) {
+  public long createTask(String taskName, int displayNumber, String ownerLogin) {
     TaskEntity task = new TaskEntity();
     task.setTaskName(taskName);
     task.setDisplayNumber(displayNumber);
+    task.setOwnerLogin(ownerLogin);
     return taskRepository.save(task).getId();
   }
 
   @Transactional
-  public void updateTask(long id, String taskName, int displayNumber) {
-    TaskEntity task = taskRepository.findById(id)
+  public void updateTask(long id, String taskName, int displayNumber, String ownerLogin) {
+    TaskEntity task = taskRepository.findByIdAndOwnerLogin(id, ownerLogin)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     task.setTaskName(taskName);
     task.setDisplayNumber(displayNumber);
