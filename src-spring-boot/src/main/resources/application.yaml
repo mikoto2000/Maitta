@@ -35,13 +35,24 @@ spring:
 
 server:
   forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
 
 app:
   cors:
     enabled: true
-    allowed-origins:
-      - ${MAITTA_ALLOWED_ORIGINS:http://localhost:1420}
+    allowed-origins: ${MAITTA_ALLOWED_ORIGINS:http://localhost:1420}
     allow-credentials: true
   security:
     oauth2:
       frontend-success-url: ${MAITTA_FRONTEND_SUCCESS_URL:http://localhost:1420/}
+
+logging:
+  level:
+    org.springframework.security.oauth2.client: DEBUG
+    org.springframework.security.oauth2.core: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
+

@@ -31,12 +31,13 @@ export class SpringBootService implements Service {
     const response = await fetch(`${this.baseUrl}/api/auth/status`, {
       credentials: "include",
     });
-    if (response.status === 401 || response.status === 403) {
-      throw new Error("Unauthorized");
-    }
     if (!response.ok) {
       const body = await response.text();
       throw new Error(`Request failed: ${response.status} ${response.statusText} ${body}`);
+    }
+    const data = (await response.json()) as { authenticated?: boolean };
+    if (!data.authenticated) {
+      throw new Error("Unauthorized");
     }
   }
 

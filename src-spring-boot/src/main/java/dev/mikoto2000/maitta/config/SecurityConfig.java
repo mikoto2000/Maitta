@@ -42,6 +42,7 @@ public class SecurityConfig {
                     "/login",
                     "/oauth2/**",
                     "/login/oauth2/**",
+                    "/api/auth/status",
                     "/api/csrf",
                     "/h2-console/**")
                 .permitAll()
