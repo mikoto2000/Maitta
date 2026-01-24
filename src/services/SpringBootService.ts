@@ -32,8 +32,7 @@ export class SpringBootService implements Service {
       credentials: "include",
     });
     if (response.status === 401 || response.status === 403) {
-      window.location.href = "/login";
-      return;
+      throw new Error("Unauthorized");
     }
     if (!response.ok) {
       const body = await response.text();

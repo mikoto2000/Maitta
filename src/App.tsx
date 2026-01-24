@@ -51,6 +51,9 @@ function App({ service }: AppProps) {
 
   useEffect(() => {
     (async () => {
+      if (window.location.pathname === "/login") {
+        return;
+      }
       try {
         await activeService.checkAuth();
       } catch (err) {
