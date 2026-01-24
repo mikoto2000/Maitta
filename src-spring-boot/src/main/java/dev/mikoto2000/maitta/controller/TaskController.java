@@ -29,22 +29,6 @@ public class TaskController {
   }
 
   /**
-   * GET /api/settings/display-mode
-   */
-  @GetMapping("/settings/display-mode")
-  public ResponseEntity<DisplayModeResponse> getDisplayMode() {
-    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
-  }
-
-  /**
-   * PUT /api/settings/display-mode
-   */
-  @PutMapping("/settings/display-mode")
-  public ResponseEntity<Void> saveDisplayMode(@RequestBody DisplayModeRequest request) {
-    return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
-  }
-
-  /**
    * GET /api/tasks
    */
   @GetMapping("/tasks")
